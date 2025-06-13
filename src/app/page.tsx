@@ -1,5 +1,11 @@
-import Image from 'next/image'
+import ImageX from './components/imagex'
+import Counter from './components/counter'
  
 export default function Page() {
-  return <Image src="/X-brain.png" alt="Brain" width={700} height={700} />
+  return (
+    <>
+    <ImageX/>
+    <Counter/>    
+    </>
+)
 }

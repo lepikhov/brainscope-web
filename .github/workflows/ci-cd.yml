@@ -1,8 +1,39 @@
-name: ci-cd work
+name: CI/CD Pipeline
 on: push
 jobs:
-  sample-job:
+  # Build Job
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: my-step
-        run: echo "ci-cd work"
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Install Dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test        
+      - name: Build Project
+        run: npm run build
+  # Deploy Job
+  deploy:
+    # Add a dependency to the build job
+    needs: build
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}
+            git pull origin master
+            git status
+            npm install --only=prod
+            pm2 restart brainscope-web
