@@ -5,8 +5,7 @@ export default function Page() {
   return (
     <>
     <ImageX/>
-    <Counter/>    
-    <Counter/>      
+    <Counter/>       
     </>
 )
 }
