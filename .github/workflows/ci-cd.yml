@@ -17,6 +17,9 @@ jobs:
         run: npm test        
       - name: Build Project
         run: npm run build
+      - name: Handle failure
+        if: ${{ failure() }}
+        run: echo "Deployment failed!" && exit 1        
   # Deploy Job
   deploy:
     # Add a dependency to the build job
@@ -24,7 +27,7 @@ jobs:
     # Specify runner + deployment step
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact
+      - name: Deploy to Server 
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
